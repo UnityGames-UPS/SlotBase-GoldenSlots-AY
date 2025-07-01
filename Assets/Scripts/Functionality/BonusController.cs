@@ -14,7 +14,7 @@ public class BonusController : MonoBehaviour
     [SerializeField]
     private TMP_Text[] Bonus_Text;
     [SerializeField]
-    private TMP_Text Total_Bonus;
+    internal TMP_Text Total_Bonus;
     [SerializeField]
     private GameObject Bonus_Object;
     [SerializeField]
@@ -39,19 +39,19 @@ public class BonusController : MonoBehaviour
     private void Start()
     {
         Chest_References[0].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[0].m_Chest_Button.onClick.AddListener(delegate { OnClickOpenBonus(0); });
+        Chest_References[0].m_Chest_Button.onClick.AddListener(delegate { OnClickOpenBonus(0); slotBehaviour.OnBonusChestClick(0); });
 
         Chest_References[1].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[1].m_Chest_Button.onClick.AddListener(delegate { OnClickOpenBonus(1); });
+        Chest_References[1].m_Chest_Button.onClick.AddListener(delegate { OnClickOpenBonus(1); slotBehaviour.OnBonusChestClick(1); });
 
         Chest_References[2].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[2].m_Chest_Button.onClick.AddListener(delegate { OnClickOpenBonus(2); });
+        Chest_References[2].m_Chest_Button.onClick.AddListener(delegate { OnClickOpenBonus(2); slotBehaviour.OnBonusChestClick(2); });
 
         Chest_References[3].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[3].m_Chest_Button.onClick.AddListener(delegate { OnClickOpenBonus(3); });
+        Chest_References[3].m_Chest_Button.onClick.AddListener(delegate { OnClickOpenBonus(3); slotBehaviour.OnBonusChestClick(3); });
 
         Chest_References[4].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[4].m_Chest_Button.onClick.AddListener(delegate { OnClickOpenBonus(4); });
+        Chest_References[4].m_Chest_Button.onClick.AddListener(delegate { OnClickOpenBonus(4); slotBehaviour.OnBonusChestClick(4); });
     }
 
     internal void StartBonus(List<int> bonusResult, double mult)
@@ -59,8 +59,9 @@ public class BonusController : MonoBehaviour
         //if (PopupPanel) PopupPanel.SetActive(false);
         if (Win_Transform) Win_Transform.gameObject.SetActive(false);
         if (Loose_Transform) Loose_Transform.gameObject.SetActive(false);
+        Total_Bonus.text = "00";
         // if (_audioManager) _audioManager.SwitchBGSound(true);
-        if(_audioManager) _audioManager.playBgAudio("bonus");
+        if (_audioManager) _audioManager.playBgAudio("bonus");
         if(_audioManager) _audioManager.StopWLAaudio();
         if (Bonus_Object) Bonus_Object.SetActive(true);
         m_BonusChestIndices = bonusResult.ToArray();
@@ -97,7 +98,7 @@ public class BonusController : MonoBehaviour
     {
         bool value_Config = false;
         IsOpening = true;
-        double bonusAmount = multiplier * m_BonusChestIndices[m_Chest_Index_Count];
+        double bonusAmount = multiplier * m_BonusChestIndices[indexOfChest];
         // TMP_Text bonusText=Win_Transform.GetChild(0).GetComponent<TMP_Text>();
         //Loop Through The References To Find The Element Of The Index
         //Checking if in the array of the possibilities it comes zero then game will get over.
@@ -113,12 +114,12 @@ public class BonusController : MonoBehaviour
         // Win_Transform.GetChild(0).GetComponent<TMP_Text>().text = bonusAmount.ToString();
 
         m_total_bonus += bonusAmount;
-        Total_Bonus.text = m_total_bonus.ToString();
+       // Total_Bonus.text = m_total_bonus.ToString();
 
         yield return new WaitForSeconds(0.5f);
         Chest_References[indexOfChest].m_Chest_Button.GetComponent<ImageAnimation>().StopAnimation();
 
-        if (m_BonusChestIndices[m_Chest_Index_Count] != 0)
+        if (m_BonusChestIndices[indexOfChest] != 0)
         {
             value_Config = true;
 

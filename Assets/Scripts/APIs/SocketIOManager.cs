@@ -47,7 +47,7 @@ public class SocketIOManager : MonoBehaviour
     protected string SocketURI = null;
     // COMPLETED: slot to be changed
    // protected string TestSocketURI = "https://game-crm-rtp-backend.onrender.com/";
-     protected string TestSocketURI = "http://localhost:5001"; 
+     protected string TestSocketURI = "https://sl3l5zz3-5000.inc1.devtunnels.ms/"; 
     //protected string TestSocketURI = "https://7p68wzhv-5000.inc1.devtunnels.ms/";
 
     [SerializeField]
@@ -103,30 +103,47 @@ public class SocketIOManager : MonoBehaviour
         options.ConnectWith = Best.SocketIO.Transports.TransportTypes.WebSocket; //BackendChanges
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-    string url = Application.absoluteURL;
-    Debug.Log("Unity URL : " + url);
-    ExtractUrlAndToken(url);
-
-    Func<SocketManager, Socket, object> webAuthFunction = (manager, socket) =>
-    {
-      return new
-      {
-        token = testToken,
-      };
-    };
-    options.Auth = webAuthFunction;
+        JSManager.SendCustomMessage("authToken");
+        StartCoroutine(WaitForAuthToken(options));
 #else
         Func<SocketManager, Socket, object> authFunction = (manager, socket) =>
         {
             return new
             {
                 token = testToken,
+
             };
         };
         options.Auth = authFunction;
-#endif
         // Proceed with connecting to the server
         SetupSocketManager(options);
+#endif
+
+        //#if UNITY_WEBGL && !UNITY_EDITOR
+        //    string url = Application.absoluteURL;
+        //    Debug.Log("Unity URL : " + url);
+        //    ExtractUrlAndToken(url);
+
+        //    Func<SocketManager, Socket, object> webAuthFunction = (manager, socket) =>
+        //    {
+        //      return new
+        //      {
+        //        token = testToken,
+        //      };
+        //    };
+        //    options.Auth = webAuthFunction;
+        //#else
+        //        Func<SocketManager, Socket, object> authFunction = (manager, socket) =>
+        //        {
+        //            return new
+        //            {
+        //                token = testToken,
+        //            };
+        //        };
+        //        options.Auth = authFunction;
+        //#endif
+        //        // Proceed with connecting to the server
+        //        SetupSocketManager(options);
     }
 
 
@@ -150,7 +167,7 @@ public class SocketIOManager : MonoBehaviour
             return new
             {
                 token = myAuth,
-                gameId = gameID
+                
             };
         };
         options.Auth = authFunction;
@@ -184,6 +201,7 @@ public class SocketIOManager : MonoBehaviour
         gameSocket.On<string>(SocketIOEventTypes.Error, OnError);
         gameSocket.On<string>("game:init", OnListenEvent);
         gameSocket.On<string>("spin:result", OnResult);
+        gameSocket.On<string>("bonus:result", OnBonusResult);
         gameSocket.On<bool>("socketState", OnSocketState);
         gameSocket.On<string>("internalError", OnSocketError);
         gameSocket.On<string>("alert", OnSocketAlert);
@@ -196,7 +214,14 @@ public class SocketIOManager : MonoBehaviour
         Debug.Log("Connected!");
         SendPing();
     }
+    void OnBonusResult(string data)
+    {
+        // Handle the game result here
+        Debug.Log("Bonus Result: " + data);
 
+        ParseResponse(data);
+
+    }
     private void OnDisconnected(string response)
     {
         Debug.Log("Disconnected from the server");
@@ -210,7 +235,18 @@ public class SocketIOManager : MonoBehaviour
         //    uiManager.DisconnectionPopup(false);
         //}
     }
-
+    internal void OnBonusCollect(int index)
+    {
+        isResultdone = false;
+        BonusData data = new()
+        {
+            type = "bonus",
+            Event = "tap",
+            index = index,
+        };
+        string json = JsonUtility.ToJson(data);
+        SendDataWithNamespace("bonus:request", json);
+    }
     private void OnError(string response)
     {
         Debug.LogError("Error: " + response);
@@ -231,10 +267,7 @@ public class SocketIOManager : MonoBehaviour
         {
             Debug.Log("my state is " + state);
         }
-        else
-        {
-
-        }
+       
     }
     private void OnSocketError(string data)
     {
@@ -286,7 +319,10 @@ public class SocketIOManager : MonoBehaviour
 
     internal void CloseSocket()
     {
-        SendDataWithNamespace("EXIT");
+        SendDataWithNamespace("game:exit");
+#if UNITY_WEBGL && !UNITY_EDITOR
+        JSManager.SendCustomMessage("OnExit");
+#endif
     }
 
     internal void ReactNativeCallOnFailedToConnect() //BackendChanges
@@ -305,7 +341,7 @@ public class SocketIOManager : MonoBehaviour
 
         switch(id)
         {
-            case "InitData":
+            case "initData":
                 {
                     InitialData = myData.gameData;
                     UIData = myData.uiData;
@@ -337,6 +373,13 @@ public class SocketIOManager : MonoBehaviour
                     isResultdone = true;
                     break;
                 }
+            case "bonusResult":
+                {
+                    Debug.Log(jsonObject);
+                    UpdateUiOnResult(myData);
+                    isResultdone = true;
+                    break;
+                }
             case "ExitUser":
                 {
                     if (gameSocket != null)
@@ -361,7 +404,13 @@ public class SocketIOManager : MonoBehaviour
         }
         return bonusDataString;
     }
-
+    void UpdateUiOnResult(Root myData)
+    {
+        PlayerData = myData.player;
+        ResultData.payload.winAmount = myData.payload.winAmount;
+       
+        slotManager.updateBalance();
+    }
     private void RefreshUI()
     {
         uiManager.InitialiseUIData(UIData.paylines);
@@ -525,13 +574,13 @@ public class FreeSpins
     public bool isFreeSpin { get; set; }
 }
 
-[SerializeField]
+[Serializable]
 public class Bonus
 {
-    public int BonusSpinStopIndex { get; set; }
-    public double amount { get; set; }
+    public bool isTriggered { get; set; }
+    public List<int> result { get; set; }
+    public int amount { get; set; }
 }
-
 
 
 [Serializable]
@@ -577,4 +626,10 @@ public class AuthTokenData
     public string nameSpace; //BackendChanges
 }
 
-
+[Serializable]
+public class BonusData
+{
+    public string type;
+    public string Event;
+    public int index;
+}
