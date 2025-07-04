@@ -764,7 +764,7 @@ public class SlotBehaviour : MonoBehaviour
         // }
         if (SocketManager.ResultData.bonus.isTriggered)
         {
-
+            yield return new WaitForSeconds(1f);
             _bonusManager.StartBonus(SocketManager.ResultData.bonus.result, SocketManager.InitialData.bets[BetCounter]);
 
         }
@@ -785,27 +785,10 @@ public class SlotBehaviour : MonoBehaviour
         }
         else
         {
-            //yield return new WaitForSeconds(2.5f);
+       
             IsSpinning = false;
         }
-        // if(SocketManager.ResultData.freeSpins.isNewAdded)
-        // {
-        //     if(IsFreeSpin)
-        //     {
-        //         IsFreeSpin = false;
-        //         if (FreeSpinRoutine != null)
-        //         {
-        //             StopCoroutine(FreeSpinRoutine);
-        //             FreeSpinRoutine = null;
-        //         }
-        //     }
-        //     uiManager.FreeSpinProcess((int)SocketManager.ResultData.freeSpins.count);
-        //     if (IsAutoSpin)
-        //     {
-        //         StopAutoSpin();
-        //         yield return new WaitForSeconds(0.1f);
-        //     }
-        // }
+   
     }
 
     private void BalanceDeduction()
@@ -864,28 +847,7 @@ public class SlotBehaviour : MonoBehaviour
     //generate the payout lines generated 
     private void CheckPayoutLineBackend(List<int> LineId, double jackpot = 0)
     {
-        // List<int> y_points = null;
-        // List<int> points_anim = null;
-        //if (LineId.Count > 0)
-        //{
-        //    List<KeyValuePair<int, int>> coords = new();
-        //    for (int j = 0; j < LineId.Count; j++)
-        //    {
-        //        for (int k = 0; k < SocketManager.ResultData.payload.wins[j].positions.Count; k++)
-        //        {
-        //            int rowIndex = SocketManager.InitialData.lines[LineId[j]][k];
-        //            int columnIndex = k;
-        //            coords.Add(new KeyValuePair<int, int>(rowIndex, columnIndex));
-        //        }
-        //    }
-
-        //    foreach (var coord in coords)
-        //    {
-        //        int rowIndex = coord.Key;
-        //        int columnIndex = coord.Value;
-        //        StartGameAnimation(Tempimages[columnIndex].slotImages[rowIndex].gameObject);
-        //    }
-        //}
+  
 
         if (LineId.Count > 0)
         {
@@ -899,13 +861,6 @@ public class SlotBehaviour : MonoBehaviour
             WinAnimRoutine = StartCoroutine(AnimationCoroutine(LineId));
         }
 
-
-        // else
-        // {
-         
-        //     //if (audioController) audioController.PlayWLAudio("lose");
-        //     if (audioController) audioController.StopWLAaudio();
-        // }
     }
     #endregion
     private void CheckForFeaturesAnimation()
@@ -914,22 +869,12 @@ public class SlotBehaviour : MonoBehaviour
         bool playScatter = false;
         bool playBonus = false;
         bool playFreespin = false;
-        if (SocketManager.ResultData.jackpot.amount > 0)
-        {
-            playJackpot = true;
-        }
-        if (SocketManager.ResultData.scatter.amount > 0)
-        {
-            playScatter = true;
-        }
-        if (SocketManager.ResultData.bonus.amount > 0)
+      
+        if (SocketManager.ResultData.bonus.isTriggered)
         {
             playBonus = true;
         }
-        if (SocketManager.ResultData.freeSpin.isFreeSpin)
-        {
-            playFreespin = true;
-        }
+       
         PlayFeatureAnimation(playJackpot, playScatter, playBonus, playFreespin);
     }
     private void PlayFeatureAnimation(bool jackpot = false, bool scatter = false, bool bonus = false, bool freeSpin = false)
@@ -941,22 +886,13 @@ public class SlotBehaviour : MonoBehaviour
 
                 if (int.TryParse(SocketManager.ResultData.matrix[i][j], out int parsedNumber))
                 {
-                    if (jackpot && parsedNumber == 12)
+                   
+                    if (bonus && parsedNumber == 10)
                     {
+                      
                         StartGameAnimation(Tempimages[j].slotImages[i].gameObject);
                     }
-                    if (scatter && parsedNumber == 11)
-                    {
-                        StartGameAnimation(Tempimages[j].slotImages[i].gameObject);
-                    }
-                    if (bonus && parsedNumber == 13)
-                    {
-                        StartGameAnimation(Tempimages[j].slotImages[i].gameObject);
-                    }
-                    if (freeSpin && parsedNumber == 9)
-                    {
-                        StartGameAnimation(Tempimages[j].slotImages[i].gameObject);
-                    }
+                    
                 }
 
             }
@@ -1022,7 +958,7 @@ public class SlotBehaviour : MonoBehaviour
                 }
                 
                     StopGameAnimation();
-                animFrame.Clear();
+                    animFrame.Clear();
             }
             PayCalculator.ResetAllPayLines();
             n--;

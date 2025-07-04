@@ -6679,7 +6679,8 @@ MonoBehaviour:
   bonusdata: []
   JSManager: {fileID: 1481726372}
   _jsManager: {fileID: 500036493}
-  testToken: f512311d2642472d8a19ea028bae0d78
+  TestSocketURI: https://sl3l5zz3-5000.inc1.devtunnels.ms/
+  testToken: 6e6815919518483fb715a4c2f48a31cf
 --- !u!114 &500036493
 MonoBehaviour:
   m_ObjectHideFlags: 0

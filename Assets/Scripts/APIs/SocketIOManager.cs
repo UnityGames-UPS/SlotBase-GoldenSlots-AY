@@ -47,7 +47,7 @@ public class SocketIOManager : MonoBehaviour
     protected string SocketURI = null;
     // COMPLETED: slot to be changed
    // protected string TestSocketURI = "https://game-crm-rtp-backend.onrender.com/";
-     protected string TestSocketURI = "https://sl3l5zz3-5000.inc1.devtunnels.ms/"; 
+    [SerializeField] protected string TestSocketURI = ""; 
     //protected string TestSocketURI = "https://7p68wzhv-5000.inc1.devtunnels.ms/";
 
     [SerializeField]
@@ -200,7 +200,7 @@ public class SocketIOManager : MonoBehaviour
         gameSocket.On<string>(SocketIOEventTypes.Disconnect, OnDisconnected);
         gameSocket.On<string>(SocketIOEventTypes.Error, OnError);
         gameSocket.On<string>("game:init", OnListenEvent);
-        gameSocket.On<string>("spin:result", OnResult);
+        gameSocket.On<string>("result", OnResult);
         gameSocket.On<string>("bonus:result", OnBonusResult);
         gameSocket.On<bool>("socketState", OnSocketState);
         gameSocket.On<string>("internalError", OnSocketError);
@@ -235,18 +235,7 @@ public class SocketIOManager : MonoBehaviour
         //    uiManager.DisconnectionPopup(false);
         //}
     }
-    internal void OnBonusCollect(int index)
-    {
-        isResultdone = false;
-        BonusData data = new()
-        {
-            type = "bonus",
-            Event = "tap",
-            index = index,
-        };
-        string json = JsonUtility.ToJson(data);
-        SendDataWithNamespace("bonus:request", json);
-    }
+    
     private void OnError(string response)
     {
         Debug.LogError("Error: " + response);
@@ -350,7 +339,7 @@ public class SocketIOManager : MonoBehaviour
 
                     if (!SetInit)
                     {
-                        Debug.Log(jsonObject);
+                     //   Debug.Log(jsonObject);
                         List<string> LinesString = ConvertListListIntToListString(InitialData.lines);
                         //List<string> InitialReels = ConvertListOfListsToStrings(InitialData.Reel);
                         //InitialReels = RemoveQuotes(InitialReels);
@@ -365,7 +354,7 @@ public class SocketIOManager : MonoBehaviour
                 }
             case "ResultData":
                 {
-                    Debug.Log(jsonObject);
+                  //  Debug.Log(jsonObject);
                     // myData.message.GameData.FinalResultReel = ConvertListOfListsToStrings(myData.message.GameData.ResultReel);
                     // myData.message.GameData.FinalsymbolsToEmit = TransformAndRemoveRecurring(myData.message.GameData.symbolsToEmit);
                     ResultData = myData;
@@ -375,7 +364,7 @@ public class SocketIOManager : MonoBehaviour
                 }
             case "bonusResult":
                 {
-                    Debug.Log(jsonObject);
+                   // Debug.Log(jsonObject);
                     UpdateUiOnResult(myData);
                     isResultdone = true;
                     break;
@@ -436,12 +425,27 @@ public class SocketIOManager : MonoBehaviour
     {
         isResultdone = false;
         MessageData message = new MessageData();
-        message.currentBet = slotManager.BetCounter;
+        message.payload = new SentDeta();
+        message.type = "SPIN";
+        Debug.Log(slotManager.BetCounter);
+        message.payload.betIndex = slotManager.BetCounter;
         // Serialize message data to JSON
         string json = JsonUtility.ToJson(message);
-        SendDataWithNamespace("spin:request", json);
+        SendDataWithNamespace("request", json);
     }
+    internal void OnBonusCollect(int index)
+    {
+        isResultdone = false;
+        MessageData message = new MessageData();
+        message.payload = new SentDeta();
+        message.type = "BONUS";
 
+        message.payload.index = index;
+        message.payload.Event = "tap";
+        // Serialize message data to JSON
+        string json = JsonUtility.ToJson(message);
+        SendDataWithNamespace("request", json);
+    }
     private List<string> RemoveQuotes(List<string> stringList)
     {
         for (int i = 0; i < stringList.Count; i++)
@@ -512,9 +516,18 @@ public class SocketIOManager : MonoBehaviour
 [Serializable]
 public class MessageData
 {
-    public int currentBet;
-}
+    public string type;
 
+    public SentDeta payload;
+}
+[Serializable]
+public class SentDeta
+{
+    public int betIndex;
+    public string Event;
+    public double lastWinning;
+    public int index;
+}
 [Serializable]
 public class GameData
 {
