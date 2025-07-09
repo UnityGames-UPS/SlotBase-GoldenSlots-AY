@@ -16,12 +16,12 @@ public class PayoutCalculation : MonoBehaviour
     {
         if (LineId >= 0)
         {
-            Debug.Log(string.Concat("<color=yellow><b>", m_hovered.ToString(), LineId.ToString(), "</b></color>"));
+            //Debug.Log(string.Concat("<color=yellow><b>", m_hovered.ToString(), LineId.ToString(), "</b></color>"));
             if (!m_hovered)
             {
                 tempIds.Add(LineId);
             }
-            foreach (var _ in tempIds) { Debug.Log(string.Concat("<color=yellow><b>", tempIds, "</b></color>")); }
+            //foreach (var _ in tempIds) { Debug.Log(string.Concat("<color=yellow><b>", tempIds, "</b></color>")); }
             Pay_Line_References[LineId].SetActive(true);
 
         }

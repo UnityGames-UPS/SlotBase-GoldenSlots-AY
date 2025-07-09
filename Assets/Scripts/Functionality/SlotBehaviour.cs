@@ -340,10 +340,8 @@ public class SlotBehaviour : MonoBehaviour
     }
     internal void updateBalance()
     {
-
         if (Balance_text) Balance_text.text = SocketManager.PlayerData.balance.ToString("f3");
         if (TotalWin_text) TotalWin_text.text = SocketManager.ResultData.payload.winAmount.ToString("f3");
-        _bonusManager.Total_Bonus.text = SocketManager.ResultData.payload.winAmount.ToString("f3");
     }
     private IEnumerator FreeSpinCoroutine(int spinchances)
     {
@@ -765,7 +763,7 @@ public class SlotBehaviour : MonoBehaviour
         if (SocketManager.ResultData.bonus.isTriggered)
         {
             yield return new WaitForSeconds(1f);
-            _bonusManager.StartBonus(SocketManager.ResultData.bonus.result, SocketManager.InitialData.bets[BetCounter]);
+            _bonusManager.StartBonus();
 
         }
         else
@@ -1121,10 +1119,10 @@ public class SlotBehaviour : MonoBehaviour
         }
     }
 
-    internal void OnBonusChestClick(int index)
-    {
-        SocketManager.OnBonusCollect(index);
-    }
+    //internal void OnBonusChestClick(int index)
+    //{
+    //    SocketManager.OnBonusCollect(index);
+    //}
     private void KillAllTweens()
     {
         for (int i = 0; i < alltweens.Count; i++)

@@ -1287,6 +1287,7 @@ MonoBehaviour:
   Win_Transform: {fileID: 1445871275}
   Loose_Transform: {fileID: 699539022}
   slotBehaviour: {fileID: 2046803210}
+  socketManager: {fileID: 500036492}
 --- !u!1 &67413395
 GameObject:
   m_ObjectHideFlags: 0
@@ -6676,11 +6677,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotManager: {fileID: 2046803210}
   uiManager: {fileID: 377874625}
-  bonusdata: []
+  bonusController: {fileID: 65498559}
   JSManager: {fileID: 1481726372}
   _jsManager: {fileID: 500036493}
-  TestSocketURI: https://sl3l5zz3-5000.inc1.devtunnels.ms/
-  testToken: 6e6815919518483fb715a4c2f48a31cf
+  TestSocketURI: https://9qr6bgs3-5000.inc1.devtunnels.ms/
+  testToken: b0914e09ac784d8288d3568471f1f385
 --- !u!114 &500036493
 MonoBehaviour:
   m_ObjectHideFlags: 0

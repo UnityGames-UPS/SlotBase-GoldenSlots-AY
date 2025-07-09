@@ -22,13 +22,15 @@ public class SocketIOManager : MonoBehaviour
 
     [SerializeField]
     private UIManager uiManager;
+    [SerializeField] BonusController bonusController;
 
     internal GameData InitialData = null;
     internal UiData UIData = null;
     internal Root ResultData = null;
     internal Player PlayerData = null;
-    [SerializeField]
-    internal List<string> bonusdata = null;
+    internal Root bonusData = new();
+    //[SerializeField]
+    //internal List<string> bonusdata = null;
     //WebSocket currentSocket = null;
     internal bool isResultdone = false;
 
@@ -335,7 +337,7 @@ public class SocketIOManager : MonoBehaviour
                     InitialData = myData.gameData;
                     UIData = myData.uiData;
                     PlayerData = myData.player;
-                    bonusdata = GetBonusData(myData.gameData.spinBonus);
+                    //bonusdata = GetBonusData(myData.gameData.spinBonus);
 
                     if (!SetInit)
                     {
@@ -364,9 +366,13 @@ public class SocketIOManager : MonoBehaviour
                 }
             case "bonusResult":
                 {
-                   // Debug.Log(jsonObject);
-                    UpdateUiOnResult(myData);
-                    isResultdone = true;
+                    // Debug.Log(jsonObject);
+                    //UpdateUiOnResult(myData);
+                    //isResultdone = true;
+
+                    PlayerData = myData.player;
+                    bonusData = myData;
+                    bonusController.WaitForBonusResult = false;
                     break;
                 }
             case "ExitUser":
@@ -384,22 +390,22 @@ public class SocketIOManager : MonoBehaviour
                 }
         }
     }
-    List<string> GetBonusData(List<int> bonusData)
-    {
-        List<string> bonusDataString = new List<string>();
-        foreach (int data in bonusData)
-        {
-            bonusDataString.Add(data.ToString());
-        }
-        return bonusDataString;
-    }
-    void UpdateUiOnResult(Root myData)
-    {
-        PlayerData = myData.player;
-        ResultData.payload.winAmount = myData.payload.winAmount;
+    //List<string> GetBonusData(List<int> bonusData)
+    //{
+    //    List<string> bonusDataString = new List<string>();
+    //    foreach (int data in bonusData)
+    //    {
+    //        bonusDataString.Add(data.ToString());
+    //    }
+    //    return bonusDataString;
+    //}
+    //void UpdateUiOnResult(Root myData)
+    //{
+    //    PlayerData = myData.player;
+    //    ResultData.payload.winAmount = myData.payload.winAmount;
        
-        slotManager.updateBalance();
-    }
+    //    slotManager.updateBalance();
+    //}
     private void RefreshUI()
     {
         uiManager.InitialiseUIData(UIData.paylines);
@@ -440,6 +446,7 @@ public class SocketIOManager : MonoBehaviour
         message.payload = new SentDeta();
         message.type = "BONUS";
 
+        message.payload.betIndex = slotManager.BetCounter;
         message.payload.index = index;
         message.payload.Event = "tap";
         // Serialize message data to JSON
@@ -570,6 +577,9 @@ public class Payload
 {
     public double winAmount { get; set; }
     public List<Win> wins { get; set; }
+
+    //bonus
+    public double payout { get; set; }
 }
 [Serializable]
 public class Win

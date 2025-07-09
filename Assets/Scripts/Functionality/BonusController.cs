@@ -31,31 +31,33 @@ public class BonusController : MonoBehaviour
 
     // [Header("For Testing Purpose Only...")]
 
-    private int[] m_BonusChestIndices; //Testing Bonus Data To Entered In The Unity Editor
+    //private int[] m_BonusChestIndices; //Testing Bonus Data To Entered In The Unity Editor
    // private int m_Chest_Index_Count = 0;
     private double m_total_bonus = 0;
-   // private bool IsOpening;
-    private double multiplier;
+    private bool IsOpening;
+    //private double multiplier;
+    internal bool WaitForBonusResult = true;
     [SerializeField] private SlotBehaviour slotBehaviour;
+    [SerializeField] private SocketIOManager socketManager;
     private void Start()
     {
         Chest_References[0].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[0].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(0); slotBehaviour.OnBonusChestClick(0); } });
+        Chest_References[0].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(0);} });
 
         Chest_References[1].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[1].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(1); slotBehaviour.OnBonusChestClick(1); } });
+        Chest_References[1].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(1);} });
 
         Chest_References[2].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[2].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(2); slotBehaviour.OnBonusChestClick(2); } });
+        Chest_References[2].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(2);} });
 
         Chest_References[3].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[3].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(3); slotBehaviour.OnBonusChestClick(3); } });
+        Chest_References[3].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(3);} });
 
         Chest_References[4].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[4].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(4); slotBehaviour.OnBonusChestClick(4); } });
+        Chest_References[4].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(4);} });
     }
 
-    internal void StartBonus(List<int> bonusResult, double mult)
+    internal void StartBonus()
     {
         gameOver = false;
         if (Win_Transform) Win_Transform.gameObject.SetActive(false);
@@ -65,54 +67,56 @@ public class BonusController : MonoBehaviour
         if (_audioManager) _audioManager.playBgAudio("bonus");
         if(_audioManager) _audioManager.StopWLAaudio();
         if (Bonus_Object) Bonus_Object.SetActive(true);
-        m_BonusChestIndices = bonusResult.ToArray();
+        //m_BonusChestIndices = bonusResult.ToArray();
         
-        multiplier = mult;
-
+        //multiplier = mult;
     }
 
 
     private void OnClickOpenBonus(int indexOfChest)
     {
         Chest_References[indexOfChest].m_Chest_Button.interactable = false;
-     //   if (IsOpening) return;
+        if (IsOpening) return;
 
-         Debug.Log(string.Concat("<color=red>", "Click On Chest Detected... ", indexOfChest, "</color>"));
-        StartCoroutine(DisablePassedIndexChest(indexOfChest));
+        //Debug.Log(string.Concat("<color=red>", "Click On Chest Detected... ", indexOfChest, "</color>"));
+        StartCoroutine(OpenChest(indexOfChest));
     }
 
-    private IEnumerator DisablePassedIndexChest(int indexOfChest)
+    private IEnumerator OpenChest(int indexOfChest)
     {
-       
-       // IsOpening = true;
-        double bonusAmount = multiplier * m_BonusChestIndices[indexOfChest];
-       
-        Chest_References[indexOfChest].m_Chest_Button.GetComponent<ImageAnimation>().StartAnimation();
-       
         Chest_References[indexOfChest].m_Chest_Button.interactable = false;
-        DoAnimationOnChestClick(indexOfChest, bonusAmount);
-       
-
-        m_total_bonus += bonusAmount;
-        if (m_BonusChestIndices[indexOfChest] == 0)
+        IsOpening = true;
+        ImageAnimation chestImageAnim = Chest_References[indexOfChest].m_Chest_Button.GetComponent<ImageAnimation>();
+        Tween tween = chestImageAnim.transform.DOShakePosition(1f, new Vector3(15, 0, 0), 30, 90, true).SetLoops(-1, LoopType.Incremental);
+        WaitForBonusResult = true;
+        socketManager.OnBonusCollect(indexOfChest);
+        yield return new WaitUntil(() => !WaitForBonusResult);
+        tween.Kill();
+        chestImageAnim.StartAnimation();
+        double bonusAmount = 0;
+        if (socketManager.bonusData.payload.payout == 0)
         {
             gameOver = true;
+            socketManager.ResultData.payload.winAmount = socketManager.bonusData.payload.winAmount;
+            slotBehaviour.updateBalance();
         }
-
-        yield return new WaitForSeconds(0.5f);
-        Chest_References[indexOfChest].m_Chest_Button.GetComponent<ImageAnimation>().StopAnimation();
-       
-
-        yield return new WaitForSeconds(0.5f);
-        if (m_BonusChestIndices[indexOfChest] == 0)
+        else
         {
-           
+            m_total_bonus += socketManager.bonusData.payload.winAmount;
+            bonusAmount = socketManager.bonusData.payload.winAmount;
+        }
+       
+        DoAnimationOnChestClick(indexOfChest, bonusAmount);
+        Total_Bonus.text = string.Concat("Bonus Score", "\n\n", m_total_bonus.ToString());
+        yield return new WaitUntil(() => chestImageAnim.textureArray[^1] == chestImageAnim.rendererDelegate.sprite);
+        chestImageAnim.StopAnimation();
+       
+        if (gameOver)
+        {
             yield return new WaitForSeconds(1.5f);
             ResetChestBonusButtons();
         }
-      //  IsOpening = false;
-
-
+        IsOpening = false;
     }
 
     private void ResetChestBonusButtons()
@@ -120,9 +124,8 @@ public class BonusController : MonoBehaviour
         Bonus_Object.SetActive(false);
         if(_audioManager) _audioManager.playBgAudio();
 
-
         m_total_bonus = 0;
-        multiplier = 0;
+        //multiplier = 0;
         Total_Bonus.text = string.Concat("Bonus Score", "\n\n", m_total_bonus.ToString());
         foreach (var item in Chest_References)
         {
@@ -140,7 +143,7 @@ public class BonusController : MonoBehaviour
         if (_audioManager) _audioManager.StopWLAaudio();
 
         BonusChest m_Temp_Chest = Chest_References[m_index];
-        Debug.Log(m_score+" .>>>>>>>>>>>>> score     <<<<<<<."+m_index);
+        //Debug.Log(m_score+" .>>>>>>>>>>>>> score     <<<<<<<."+m_index);
 
         if (m_score > 0)
         {
@@ -150,35 +153,20 @@ public class BonusController : MonoBehaviour
         }
         else
         {
-
             m_Temp_Chest.m_Score.text = "Game Over";
             if (_audioManager) _audioManager.PlayWLAudio("bonuslose");
-
         }
-
         m_Temp_Chest.m_ScoreHolder.SetActive(true);
         DOTweenScale(m_Temp_Chest.m_ScoreHolder.transform, m_Temp_Chest.m_ScoreHolder.transform, 1f);
     }
 
     private void DOTweenScale(Transform m_rect_transform, Transform m_obj_transform, float m_time)
     {
-        m_rect_transform.DOScale
-            (
-                m_obj_transform.localScale + (Vector3.one * 1.2f),
-                m_time
-            );
-        m_rect_transform.DOLocalMoveY
-            (
-                m_obj_transform.position.y + 220,
-                m_time
-            ).OnComplete(() =>
+        m_rect_transform.DOScale(m_obj_transform.localScale + (Vector3.one * 1.2f), m_time);
+        m_rect_transform.DOLocalMoveY(m_obj_transform.position.y + 220, m_time).OnComplete(() =>
             {
-
                 m_obj_transform.gameObject.SetActive(false);
             });
-        //m_obj_transform.localScale = Vector3.one * 1.5f;
-
-        //m_obj_transform.position = m_obj_transform.position + (Vector3.up * 2);
     }
 
     //This method is used to reset the bonus chest to default and ready for next bonus
