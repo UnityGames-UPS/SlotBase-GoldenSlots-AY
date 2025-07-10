@@ -6680,8 +6680,7 @@ MonoBehaviour:
   bonusController: {fileID: 65498559}
   JSManager: {fileID: 1481726372}
   _jsManager: {fileID: 500036493}
-  TestSocketURI: https://9qr6bgs3-5000.inc1.devtunnels.ms/
-  testToken: b0914e09ac784d8288d3568471f1f385
+  testToken: aea7e4bb9de24badb0d420d6c035af84
 --- !u!114 &500036493
 MonoBehaviour:
   m_ObjectHideFlags: 0
