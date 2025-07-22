@@ -101,11 +101,12 @@ public class ImageAnimation : MonoBehaviour
 		}
 	}
 
-	public void StopAnimation()
+	public void StopAnimation(bool last = true)
 	{
 		if (currentAnimationState != 0)
 		{
-			rendererDelegate.sprite = textureArray[0];
+			if(last)rendererDelegate.sprite = textureArray[0];
+			else rendererDelegate.sprite = textureArray[textureArray.Count-1];
 			CancelInvoke("AnimationProcess");
 			currentAnimationState = ImageState.NONE;
 		}

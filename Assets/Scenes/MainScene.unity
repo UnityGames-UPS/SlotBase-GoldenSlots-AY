@@ -1259,18 +1259,23 @@ MonoBehaviour:
   - m_Score: {fileID: 488500060}
     m_Chest_Button: {fileID: 1095598587}
     m_ScoreHolder: {fileID: 1140229240}
+    isOpend: 0
   - m_Score: {fileID: 917656942}
     m_Chest_Button: {fileID: 1302901933}
     m_ScoreHolder: {fileID: 240535918}
+    isOpend: 0
   - m_Score: {fileID: 1667382160}
     m_Chest_Button: {fileID: 461106733}
     m_ScoreHolder: {fileID: 493311414}
+    isOpend: 0
   - m_Score: {fileID: 1480700884}
     m_Chest_Button: {fileID: 482394957}
     m_ScoreHolder: {fileID: 6531700}
+    isOpend: 0
   - m_Score: {fileID: 67413397}
     m_Chest_Button: {fileID: 784618917}
     m_ScoreHolder: {fileID: 1596086765}
+    isOpend: 0
   Bonus_Text:
   - {fileID: 0}
   - {fileID: 0}
@@ -5603,7 +5608,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 21300000, guid: 2b0995e451bdb9e498438024d3d83469, type: 3}
+    m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -6126,7 +6131,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 21300000, guid: 2b0995e451bdb9e498438024d3d83469, type: 3}
+    m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -6680,7 +6685,8 @@ MonoBehaviour:
   bonusController: {fileID: 65498559}
   JSManager: {fileID: 1481726372}
   _jsManager: {fileID: 500036493}
-  testToken: aea7e4bb9de24badb0d420d6c035af84
+  TestSocketURI: http://localhost:5000
+  testToken: e83c716e3dc64ea6b39e0a3be965898c
 --- !u!114 &500036493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11248,7 +11254,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 21300000, guid: 2b0995e451bdb9e498438024d3d83469, type: 3}
+    m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -15575,7 +15581,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 21300000, guid: 2b0995e451bdb9e498438024d3d83469, type: 3}
+    m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -18634,7 +18640,7 @@ MonoBehaviour:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
     m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 21300000, guid: 2b0995e451bdb9e498438024d3d83469, type: 3}
+    m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted

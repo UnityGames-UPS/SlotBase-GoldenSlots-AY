@@ -372,7 +372,7 @@ public class SocketIOManager : MonoBehaviour
 
                     PlayerData = myData.player;
                     bonusData = myData;
-                    bonusController.WaitForBonusResult = false;
+                    isResultdone = true;
                     break;
                 }
             case "ExitUser":

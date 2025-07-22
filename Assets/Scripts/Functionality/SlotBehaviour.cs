@@ -520,104 +520,14 @@ public class SlotBehaviour : MonoBehaviour
         animScript.textureArray.TrimExcess();
         switch (val)
         {
-            //case 3:
-            //    for (int i = 0; i < A_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(A_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = 4;
-            //    break;
-            //case 5:
-            //    for (int i = 0; i < K_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(K_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = 4;
-            //    break;
-            //case 6:
-            //    for (int i = 0; i < Q_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(Q_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = 4;
-            //    break;
-            //case 4:
-            //    for (int i = 0; i < J_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(J_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = 4;
-            //    break;
-            //case 2:
-            //    for (int i = 0; i < Ten_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(Ten_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = 4;
-            //    break;
-            //case 1:
-            //    for (int i = 0; i < Nine_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(Nine_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = 4;
-            //    break;
-            //case 8:
-            //    for (int i = 0; i < Diamond_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(Diamond_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = Diamond_Sprite.Length - 7;
-            //    break;
-            //case 7:
-            //    for (int i = 0; i < Ace_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(Ace_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = Ace_Sprite.Length - 7;
-            //    break;
-            //case 0:
-            //    for (int i = 0; i < Seven_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(Seven_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = Seven_Sprite.Length - 7;
-            //    break;
-            //case 9:
-            //    for (int i = 0; i < Magnet_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(Magnet_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = Magnet_Sprite.Length - 7;
-            //    break;
-            //case 10:
-            //    for (int i = 0; i < Bonus_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(Bonus_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = Bonus_Sprite.Length - 7;
-            //    break;
-            //case 12:
-            //    for (int i = 0; i < Scatter_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(Scatter_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = Scatter_Sprite.Length - 7;
-            //    break;
-            //case 11:
-            //    for (int i = 0; i < Wild_Sprite.Length; i++)
-            //    {
-            //        animScript.textureArray.Add(Wild_Sprite[i]);
-            //    }
-            //    animScript.AnimationSpeed = Wild_Sprite.Length - 7;
-            //    break;
+           
 
             case 0:
                 for (int i = 0; i < Nine_Sprite.Length; i++)
                 {
                     animScript.textureArray.Add(Nine_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Nine_Sprite.Length - 7;
+                animScript.AnimationSpeed = Nine_Sprite.Length ;
                 break;
 
             case 1:
@@ -625,7 +535,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(Ten_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Ten_Sprite.Length - 7;
+                animScript.AnimationSpeed = Ten_Sprite.Length ;
                 break;
 
             case 2:
@@ -633,7 +543,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(A_Sprite[i]);
                 }
-                animScript.AnimationSpeed = A_Sprite.Length - 7;
+                animScript.AnimationSpeed = A_Sprite.Length ;
                 break;
 
             case 3:
@@ -641,7 +551,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(J_Sprite[i]);
                 }
-                animScript.AnimationSpeed = J_Sprite.Length - 7;
+                animScript.AnimationSpeed = J_Sprite.Length ;
                 break;
 
             case 4:
@@ -649,7 +559,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(K_Sprite[i]);
                 }
-                animScript.AnimationSpeed = K_Sprite.Length - 7;
+                animScript.AnimationSpeed = K_Sprite.Length ;
                 break;
 
             case 5:
@@ -657,7 +567,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(Q_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Q_Sprite.Length - 7;
+                animScript.AnimationSpeed = Q_Sprite.Length ;
                 break;
 
             case 6:
@@ -665,7 +575,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(Seven_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Seven_Sprite.Length - 7;
+                animScript.AnimationSpeed = Seven_Sprite.Length ;
                 break;
 
             case 7:
@@ -673,7 +583,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(Ace_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Ace_Sprite.Length - 7;
+                animScript.AnimationSpeed = Ace_Sprite.Length - 3;
                 break;
 
             case 8:
@@ -681,7 +591,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(Diamond_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Diamond_Sprite.Length - 7;
+                animScript.AnimationSpeed = Diamond_Sprite.Length - 3;
                 break;
 
             case 9:
@@ -689,7 +599,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(Magnet_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Magnet_Sprite.Length - 7;
+                animScript.AnimationSpeed = Magnet_Sprite.Length - 3;
                 break;
 
             case 10:
@@ -697,7 +607,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(Bonus_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Bonus_Sprite.Length - 7;
+                animScript.AnimationSpeed = Bonus_Sprite.Length - 3;
                 break;
 
             case 11:
@@ -705,7 +615,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(Wild_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Wild_Sprite.Length - 7;
+                animScript.AnimationSpeed = Wild_Sprite.Length - 3;
                 break;
 
             case 12:
@@ -713,7 +623,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(Scatter_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Scatter_Sprite.Length - 7;
+                animScript.AnimationSpeed = Scatter_Sprite.Length - 3;
                 break;
 
         }

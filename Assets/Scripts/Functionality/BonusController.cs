@@ -32,9 +32,9 @@ public class BonusController : MonoBehaviour
     // [Header("For Testing Purpose Only...")]
 
     //private int[] m_BonusChestIndices; //Testing Bonus Data To Entered In The Unity Editor
-   // private int m_Chest_Index_Count = 0;
+    // private int m_Chest_Index_Count = 0;
     private double m_total_bonus = 0;
-    private bool IsOpening;
+   
     //private double multiplier;
     internal bool WaitForBonusResult = true;
     [SerializeField] private SlotBehaviour slotBehaviour;
@@ -42,19 +42,19 @@ public class BonusController : MonoBehaviour
     private void Start()
     {
         Chest_References[0].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[0].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(0);} });
+        Chest_References[0].m_Chest_Button.onClick.AddListener(delegate {  OnClickOpenBonus(0); });
 
         Chest_References[1].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[1].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(1);} });
+        Chest_References[1].m_Chest_Button.onClick.AddListener(delegate {  OnClickOpenBonus(1); });
 
         Chest_References[2].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[2].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(2);} });
+        Chest_References[2].m_Chest_Button.onClick.AddListener(delegate { OnClickOpenBonus(2); });
 
         Chest_References[3].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[3].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(3);} });
+        Chest_References[3].m_Chest_Button.onClick.AddListener(delegate {  OnClickOpenBonus(3);  });
 
         Chest_References[4].m_Chest_Button.onClick.RemoveAllListeners();
-        Chest_References[4].m_Chest_Button.onClick.AddListener(delegate { if (!gameOver) { OnClickOpenBonus(4);} });
+        Chest_References[4].m_Chest_Button.onClick.AddListener(delegate {  OnClickOpenBonus(4);  });
     }
 
     internal void StartBonus()
@@ -63,60 +63,92 @@ public class BonusController : MonoBehaviour
         if (Win_Transform) Win_Transform.gameObject.SetActive(false);
         if (Loose_Transform) Loose_Transform.gameObject.SetActive(false);
         Total_Bonus.text = "00";
-       
+
         if (_audioManager) _audioManager.playBgAudio("bonus");
-        if(_audioManager) _audioManager.StopWLAaudio();
+        if (_audioManager) _audioManager.StopWLAaudio();
         if (Bonus_Object) Bonus_Object.SetActive(true);
         //m_BonusChestIndices = bonusResult.ToArray();
-        
+
         //multiplier = mult;
+        foreach (var chests in Chest_References)
+        {
+            chests.isOpend = false;
+        }
     }
 
+    void chestToggle(bool isTrue, bool onlyOpend = false)
+    {
+        if (!onlyOpend)
+        {
+            foreach (var chests in Chest_References)
+            {
+                chests.m_Chest_Button.interactable = isTrue;
+            }
+        }
+        else
+        {
+            foreach (var chests in Chest_References)
+            {
+                if (!chests.isOpend)
+                {
+                    chests.m_Chest_Button.interactable = isTrue;
+                }
+            }
+        }
+    }
 
     private void OnClickOpenBonus(int indexOfChest)
     {
-        Chest_References[indexOfChest].m_Chest_Button.interactable = false;
-        if (IsOpening) return;
+        if (!Chest_References[indexOfChest].isOpend && !gameOver)
+        {
+            Chest_References[indexOfChest].m_Chest_Button.interactable = false;
+            Chest_References[indexOfChest].isOpend = true;
+            //if (IsOpening) return;
 
-        //Debug.Log(string.Concat("<color=red>", "Click On Chest Detected... ", indexOfChest, "</color>"));
-        StartCoroutine(OpenChest(indexOfChest));
+            //Debug.Log(string.Concat("<color=red>", "Click On Chest Detected... ", indexOfChest, "</color>"));
+            StartCoroutine(OpenChest(indexOfChest));
+        }
     }
 
     private IEnumerator OpenChest(int indexOfChest)
     {
-        Chest_References[indexOfChest].m_Chest_Button.interactable = false;
-        IsOpening = true;
+        chestToggle(false);
+
+        //  IsOpening = true;
         ImageAnimation chestImageAnim = Chest_References[indexOfChest].m_Chest_Button.GetComponent<ImageAnimation>();
         Tween tween = chestImageAnim.transform.DOShakePosition(1f, new Vector3(15, 0, 0), 30, 90, true).SetLoops(-1, LoopType.Incremental);
-        WaitForBonusResult = true;
+
         socketManager.OnBonusCollect(indexOfChest);
-        yield return new WaitUntil(() => !WaitForBonusResult);
+        yield return new WaitUntil(() => socketManager.isResultdone);
+
         tween.Kill();
         chestImageAnim.StartAnimation();
         double bonusAmount = 0;
         if (socketManager.bonusData.payload.payout == 0)
         {
-            gameOver = true;
+            
             socketManager.ResultData.payload.winAmount = socketManager.bonusData.payload.winAmount;
             slotBehaviour.updateBalance();
+            gameOver = true;
         }
         else
         {
             m_total_bonus += socketManager.bonusData.payload.winAmount;
             bonusAmount = socketManager.bonusData.payload.winAmount;
         }
-       
+
         DoAnimationOnChestClick(indexOfChest, bonusAmount);
-        Total_Bonus.text = string.Concat("Bonus Score", "\n\n", m_total_bonus.ToString());
+        Total_Bonus.text = m_total_bonus.ToString();
         yield return new WaitUntil(() => chestImageAnim.textureArray[^1] == chestImageAnim.rendererDelegate.sprite);
-        chestImageAnim.StopAnimation();
-       
+        chestImageAnim.StopAnimation(false);
+        chestToggle(true, true);
         if (gameOver)
         {
             yield return new WaitForSeconds(1.5f);
             ResetChestBonusButtons();
         }
-        IsOpening = false;
+       // IsOpening = false;
+        yield return null;
     }
 
     private void ResetChestBonusButtons()
@@ -129,7 +161,9 @@ public class BonusController : MonoBehaviour
         Total_Bonus.text = string.Concat("Bonus Score", "\n\n", m_total_bonus.ToString());
         foreach (var item in Chest_References)
         {
-            item.m_Chest_Button.GetComponent<ImageAnimation>().StopAnimation();
+            ImageAnimation img = item.m_Chest_Button.GetComponent<ImageAnimation>();
+            img.StopAnimation();
+            img.rendererDelegate.sprite = img.textureArray[0];
             item.m_Chest_Button.interactable = true;
         }
         ResetToDefaultAnimationAfterChestClick();
@@ -184,11 +218,12 @@ public class BonusController : MonoBehaviour
 
     #region Structures Used
     [System.Serializable]
-    public struct BonusChest
+    public class BonusChest
     {
         public TMP_Text m_Score;
         public Button m_Chest_Button;
         public GameObject m_ScoreHolder;
+        public bool isOpend;
     }
     #endregion
 }
