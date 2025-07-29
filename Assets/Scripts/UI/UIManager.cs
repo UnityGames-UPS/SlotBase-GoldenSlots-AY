@@ -150,7 +150,7 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private TMP_Text reconnect_Text;
     [SerializeField]
-    private GameObject ReconnectPopup_Object;
+    private GameObject ReconectingPopup_Object;
 
     [Header("LowBalance Popup")]
     [SerializeField]
@@ -186,7 +186,7 @@ public class UIManager : MonoBehaviour
     private int FreeSpins;
     private int InfoCount = 0;
     [SerializeField] Button m_AwakeGameButton;
-
+    [SerializeField] internal GameObject RaycastBlocker;
     //COMPLETED: slot_disconnection popups
     private void Awake()
     {
@@ -324,19 +324,11 @@ public class UIManager : MonoBehaviour
         OpenPopup(LBPopup_Object);
     }
 
-    internal void DisconnectionPopup(bool isReconnection)
+    internal void DisconnectionPopup()
     {
-        if (isReconnection)
+        if (!isExit)
         {
-            OpenPopup(ReconnectPopup_Object);
-        }
-        else
-        {
-            ClosePopup(ReconnectPopup_Object);
-            if (!isExit)
-            {
-                OpenPopup(DisconnectPopup_Object);
-            }
+            OpenPopup(DisconnectPopup_Object);
         }
     }
 
@@ -651,8 +643,23 @@ public class UIManager : MonoBehaviour
         GoToPage(InfoCount);
 
     }
+    internal void ReconnectionPopup()
+    {
+        OpenPopup(ReconectingPopup_Object);
+    }
 
+    internal void CheckAndClosePopups()
+    {
 
+        if (ReconectingPopup_Object.activeInHierarchy)
+        {
+            ClosePopup(ReconectingPopup_Object);
+        }
+        if (DisconnectPopup_Object.activeInHierarchy)
+        {
+            ClosePopup(DisconnectPopup_Object);
+        }
+    }
     private void GoToPage(int index)
     {
         if (index < m_Info_Objects.Count)
