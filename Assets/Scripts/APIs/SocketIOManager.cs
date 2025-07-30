@@ -43,12 +43,12 @@ public class SocketIOManager : MonoBehaviour
 
     private SocketManager manager;
 
-    
+
 
     protected string SocketURI = null;
     // COMPLETED: slot to be changed
-   // protected string TestSocketURI = "https://game-crm-rtp-backend.onrender.com/";
-    [SerializeField] protected string TestSocketURI = ""; 
+    // protected string TestSocketURI = "https://game-crm-rtp-backend.onrender.com/";
+    [SerializeField] protected string TestSocketURI = "";
     //protected string TestSocketURI = "https://7p68wzhv-5000.inc1.devtunnels.ms/";
 
     [SerializeField]
@@ -155,7 +155,7 @@ public class SocketIOManager : MonoBehaviour
             return new
             {
                 token = myAuth,
-                
+
             };
         };
         options.Auth = authFunction;
@@ -241,7 +241,11 @@ public class SocketIOManager : MonoBehaviour
         Debug.Log($"⏱️ Updated last pong time: {lastPongTime}");
         Debug.Log($"📦 Pong payload: {data}");
     } //Back2 end
-
+    void CloseGame()
+    {
+        Debug.Log("Unity: Closing Game");
+        StartCoroutine(CloseSocket());
+    }
     private void OnError(string response)
     {
         Debug.LogError("Error: " + response);
@@ -262,7 +266,7 @@ public class SocketIOManager : MonoBehaviour
         {
             Debug.Log("my state is " + state);
         }
-       
+
     }
     private void OnSocketError(string data)
     {
@@ -333,7 +337,7 @@ public class SocketIOManager : MonoBehaviour
             yield return new WaitForSeconds(pingInterval);
         }
     } //Back2 end
-    
+
     private void AliveRequest()
     {
         SendDataWithNamespace("YES I AM ALIVE");
@@ -397,7 +401,7 @@ public class SocketIOManager : MonoBehaviour
 
         string id = myData.id;
 
-        switch(id)
+        switch (id)
         {
             case "initData":
                 {
@@ -408,7 +412,7 @@ public class SocketIOManager : MonoBehaviour
 
                     if (!SetInit)
                     {
-                     //   Debug.Log(jsonObject);
+                        //   Debug.Log(jsonObject);
                         List<string> LinesString = ConvertListListIntToListString(InitialData.lines);
                         //List<string> InitialReels = ConvertListOfListsToStrings(InitialData.Reel);
                         //InitialReels = RemoveQuotes(InitialReels);
@@ -423,7 +427,7 @@ public class SocketIOManager : MonoBehaviour
                 }
             case "ResultData":
                 {
-                  //  Debug.Log(jsonObject);
+                    //  Debug.Log(jsonObject);
                     // myData.message.GameData.FinalResultReel = ConvertListOfListsToStrings(myData.message.GameData.ResultReel);
                     // myData.message.GameData.FinalsymbolsToEmit = TransformAndRemoveRecurring(myData.message.GameData.symbolsToEmit);
                     ResultData = myData;
@@ -470,7 +474,7 @@ public class SocketIOManager : MonoBehaviour
     //{
     //    PlayerData = myData.player;
     //    ResultData.payload.winAmount = myData.payload.winAmount;
-       
+
     //    slotManager.updateBalance();
     //}
     private void RefreshUI()
@@ -478,7 +482,7 @@ public class SocketIOManager : MonoBehaviour
         uiManager.InitialiseUIData(UIData.paylines);
     }
 
-    private void PopulateSlotSocket( List<string> LineIds)
+    private void PopulateSlotSocket(List<string> LineIds)
     {
         uiManager.RaycastBlocker.SetActive(false);
         slotManager.shuffleInitialMatrix();
