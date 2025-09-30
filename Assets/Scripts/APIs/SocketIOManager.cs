@@ -186,7 +186,7 @@ public class SocketIOManager : MonoBehaviour
         // Set subscriptions
         gameSocket.On<ConnectResponse>(SocketIOEventTypes.Connect, OnConnected);
         gameSocket.On(SocketIOEventTypes.Disconnect, OnDisconnected); //Back2 Start
-        gameSocket.On(SocketIOEventTypes.Error, OnError); //Back2 Start
+        gameSocket.On<Error>(SocketIOEventTypes.Error, OnError);
 
         gameSocket.On<string>("game:init", OnListenEvent);
         gameSocket.On<string>("result", OnResult);
@@ -283,9 +283,12 @@ public class SocketIOManager : MonoBehaviour
         Debug.Log("Received Device Error with data: " + data);
         uiManager.ADfunction();
     }
-    private void OnError()
+    private void OnError(Error err)
     {
-        Debug.LogError("Socket Error");
+        Debug.LogError("Socket Error Message: " + err);
+#if UNITY_WEBGL && !UNITY_EDITOR
+    JSManager.SendCustomMessage("error");
+#endif
     }
     private void SendPing() //Back2 Start
     {
