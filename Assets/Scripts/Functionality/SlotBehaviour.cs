@@ -160,11 +160,11 @@ public class SlotBehaviour : MonoBehaviour
     private bool WasAutoSpinOn;
     private float SpinDelay = 0.2f;
 
-    private Sprite turboOriginalSprite; 
+    private Sprite turboOriginalSprite;
 
     private int SpinCounter = 0;
     internal int BetCounter = 0;
-    private double currentBalance = 0;
+    internal double currentBalance = 0;
     private double currentTotalBet = 0;
     protected int Lines = 20;
     [SerializeField]
@@ -426,7 +426,7 @@ public class SlotBehaviour : MonoBehaviour
         if (LineBet_text) LineBet_text.text = SocketManager.InitialData.bets[BetCounter].ToString();
         if (TotalBet_text) TotalBet_text.text = (SocketManager.InitialData.bets[BetCounter] * SocketManager.InitialData.lines.Count).ToString();
         currentTotalBet = SocketManager.InitialData.bets[BetCounter] * SocketManager.InitialData.lines.Count;
-       // CompareBalance();
+        // CompareBalance();
     }
 
     private void ChangeSpinAmount(bool IncDec)
@@ -469,7 +469,7 @@ public class SlotBehaviour : MonoBehaviour
         if (SpinCounter_text) SpinCounter_text.text = SpinCounter.ToString();
     }
 
-    
+
 
     #region InitialFunctions
     //Method is used to shuffle the temp matrix
@@ -498,7 +498,7 @@ public class SlotBehaviour : MonoBehaviour
         currentTotalBet = SocketManager.InitialData.bets[BetCounter] * Lines;
         // _bonusManager.PopulateWheel(SocketManager.bonusdata);
         CompareBalance();
-        uiManager.InitialiseUIData( SocketManager.UIData.paylines);
+        uiManager.InitialiseUIData(SocketManager.UIData.paylines);
     }
     #endregion
 
@@ -520,14 +520,14 @@ public class SlotBehaviour : MonoBehaviour
         animScript.textureArray.TrimExcess();
         switch (val)
         {
-           
+
 
             case 0:
                 for (int i = 0; i < Nine_Sprite.Length; i++)
                 {
                     animScript.textureArray.Add(Nine_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Nine_Sprite.Length ;
+                animScript.AnimationSpeed = Nine_Sprite.Length;
                 break;
 
             case 1:
@@ -535,7 +535,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(Ten_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Ten_Sprite.Length ;
+                animScript.AnimationSpeed = Ten_Sprite.Length;
                 break;
 
             case 2:
@@ -543,7 +543,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(A_Sprite[i]);
                 }
-                animScript.AnimationSpeed = A_Sprite.Length ;
+                animScript.AnimationSpeed = A_Sprite.Length;
                 break;
 
             case 3:
@@ -551,7 +551,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(J_Sprite[i]);
                 }
-                animScript.AnimationSpeed = J_Sprite.Length ;
+                animScript.AnimationSpeed = J_Sprite.Length;
                 break;
 
             case 4:
@@ -559,7 +559,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(K_Sprite[i]);
                 }
-                animScript.AnimationSpeed = K_Sprite.Length ;
+                animScript.AnimationSpeed = K_Sprite.Length;
                 break;
 
             case 5:
@@ -567,7 +567,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(Q_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Q_Sprite.Length ;
+                animScript.AnimationSpeed = Q_Sprite.Length;
                 break;
 
             case 6:
@@ -575,7 +575,7 @@ public class SlotBehaviour : MonoBehaviour
                 {
                     animScript.textureArray.Add(Seven_Sprite[i]);
                 }
-                animScript.AnimationSpeed = Seven_Sprite.Length ;
+                animScript.AnimationSpeed = Seven_Sprite.Length;
                 break;
 
             case 7:
@@ -711,7 +711,7 @@ public class SlotBehaviour : MonoBehaviour
             }
         }
 
-        if (IsTurboOn )                                                      // changes
+        if (IsTurboOn)                                                      // changes
         {
 
             yield return new WaitForSeconds(0.1f);
@@ -728,7 +728,7 @@ public class SlotBehaviour : MonoBehaviour
                 }
             }
             StopSpin_Button.gameObject.SetActive(false);
-        }   
+        }
 
         for (int i = 0; i < numberOfSlots; i++)
         {
@@ -755,7 +755,7 @@ public class SlotBehaviour : MonoBehaviour
                 winLine.Add(item.line);
             }
             CheckPayoutLineBackend(winLine);
-            
+
         }
         CheckForFeaturesAnimation();
         KillAllTweens();
@@ -798,10 +798,10 @@ public class SlotBehaviour : MonoBehaviour
         }
         else
         {
-       
+
             IsSpinning = false;
         }
-   
+
     }
 
     private void BalanceDeduction()
@@ -860,7 +860,7 @@ public class SlotBehaviour : MonoBehaviour
     //generate the payout lines generated 
     private void CheckPayoutLineBackend(List<int> LineId, double jackpot = 0)
     {
-  
+
 
         if (LineId.Count > 0)
         {
@@ -882,12 +882,12 @@ public class SlotBehaviour : MonoBehaviour
         bool playScatter = false;
         bool playBonus = false;
         bool playFreespin = false;
-      
+
         if (SocketManager.ResultData.bonus.isTriggered)
         {
             playBonus = true;
         }
-       
+
         PlayFeatureAnimation(playJackpot, playScatter, playBonus, playFreespin);
     }
     private void PlayFeatureAnimation(bool jackpot = false, bool scatter = false, bool bonus = false, bool freeSpin = false)
@@ -899,13 +899,13 @@ public class SlotBehaviour : MonoBehaviour
 
                 if (int.TryParse(SocketManager.ResultData.matrix[i][j], out int parsedNumber))
                 {
-                   
+
                     if (bonus && parsedNumber == 10)
                     {
-                      
+
                         StartGameAnimation(Tempimages[j].slotImages[i].gameObject);
                     }
-                    
+
                 }
 
             }
@@ -939,13 +939,13 @@ public class SlotBehaviour : MonoBehaviour
                 //for (int j = 0; j < LineId.Count; j++)
                 //{
                 coords.Clear();
-                    for (int k = 0; k < SocketManager.ResultData.payload.wins[i].positions.Count; k++)
-                    {
-                        int rowIndex = SocketManager.InitialData.lines[LineId[i]][k];
-                        int columnIndex = k;
-                        coords.Add(new KeyValuePair<int, int>(rowIndex, columnIndex));
-                    }
-               // }
+                for (int k = 0; k < SocketManager.ResultData.payload.wins[i].positions.Count; k++)
+                {
+                    int rowIndex = SocketManager.InitialData.lines[LineId[i]][k];
+                    int columnIndex = k;
+                    coords.Add(new KeyValuePair<int, int>(rowIndex, columnIndex));
+                }
+                // }
 
                 foreach (var coord in coords)
                 {
@@ -969,9 +969,9 @@ public class SlotBehaviour : MonoBehaviour
                     item.transform.parent.GetComponent<Image>().sprite = empty;
 
                 }
-                
-                    StopGameAnimation();
-                    animFrame.Clear();
+
+                StopGameAnimation();
+                animFrame.Clear();
             }
             PayCalculator.ResetAllPayLines();
             n--;
@@ -1033,7 +1033,7 @@ public class SlotBehaviour : MonoBehaviour
         if (LineBet_text) LineBet_text.text = SocketManager.InitialData.bets[BetCounter].ToString();
         if (TotalBet_text) TotalBet_text.text = (SocketManager.InitialData.bets[BetCounter] * Lines).ToString();
         currentTotalBet = SocketManager.InitialData.bets[BetCounter] * Lines;
-       // CompareBalance();
+        // CompareBalance();
     }
 
     void ToggleButtonGrp(bool toggle)
@@ -1118,7 +1118,7 @@ public class SlotBehaviour : MonoBehaviour
 
 
 
-    private IEnumerator StopTweening(int reqpos, Transform slotTransform, int index, bool isStop )
+    private IEnumerator StopTweening(int reqpos, Transform slotTransform, int index, bool isStop)
     {
         alltweens[index].Kill();
         slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, 0);

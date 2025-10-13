@@ -444,7 +444,7 @@ public class SocketIOManager : MonoBehaviour
                     // Debug.Log(jsonObject);
                     //UpdateUiOnResult(myData);
                     //isResultdone = true;
-
+                    slotManager.currentBalance = myData.player.balance;
                     PlayerData = myData.player;
                     bonusData = myData;
                     isResultdone = true;
